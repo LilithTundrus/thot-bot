@@ -1,0 +1,23 @@
+{
+  "name": "thot-bot",
+  "version": "1.0.0",
+  "description": "Stupid memery",
+  "main": "bot.js",
+  "dependencies": {
+    "discord.io": "^2.5.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LilithTundrus/thot-bot.git"
+  },
+  "author": "Lilith Tundrus",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LilithTundrus/thot-bot/issues"
+  },
+  "homepage": "https://github.com/LilithTundrus/thot-bot#readme"
+}
