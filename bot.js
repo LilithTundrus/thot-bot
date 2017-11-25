@@ -8,10 +8,7 @@ const fs = require('fs');
 // npm packages
 var Discord = require('discord.io');                                // Discord API wrapper
 var emoji = require('node-emoji');
-const randomWord = require('random-word');
 var randomWords = require('random-words');
-
-//TODO: Add a better emojify handler (special characters)
 
 var bot = new Discord.Client({                                      // Initialize Discord Bot with config.token
     token: config.discordToken,
@@ -80,17 +77,15 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                             emojiString = emojiString + ` :regional_indicator_${emojifyStr.charAt(i)}: `
                         }
                     }
-                    console.log(emojiString)
+                    console.log(emojiString);
                     bot.sendMessage({
                         to: channelID,
                         message: emojiString,
                     });
                 }
-            // Just add any case commands here
         }
     }
 });
-
 
 function randomEmojiSet(numberArg) {
     let emojiString = '';
@@ -107,7 +102,6 @@ function randomEmojiSet(numberArg) {
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-
 
 // this is pretty hacky but works for emoji-based needs
 function inWords(num) {
