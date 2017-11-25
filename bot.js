@@ -1,7 +1,8 @@
 'use strict';                                                       // Allow less 'bad' code
 // Custom requires/libs
 const config = require('./config.js');                              // Conifg/auth data
-const ver = '0.0.0022';                                             // Arbitrary version for knowing which bot version is deployed
+const ver = '0.0.1';                                                // Arbitrary version for knowing which bot version is deployed
+var reg = new RegExp('^\\d+$');
 const fs = require('fs');
 
 // npm packages
@@ -9,6 +10,8 @@ var Discord = require('discord.io');                                // Discord A
 var emoji = require('node-emoji');
 const randomWord = require('random-word');
 var randomWords = require('random-words');
+
+//TODO: Add a better emojify handler (special characters)
 
 var bot = new Discord.Client({                                      // Initialize Discord Bot with config.token
     token: config.discordToken,
@@ -23,6 +26,17 @@ bot.on('ready', function (evt) {                                    // Do some l
         idle_since: null,                                           // Set this to Date.now() to make the bot appear as away
         game: { name: 'Memes' }
     });
+});
+
+bot.on('disconnect', function (evt) {
+    console.log(`Bot DISCONNECTED at ${new Date().toISOString()}`);
+    console.log('Attempting reconnect...');
+    bot.connect();
+    if (bot.connected == true) {
+        console.log('Reconnected to Discord');
+    } else {
+        console.log('Reconnect failed...');
+    }
 });
 
 bot.on('message', function (user, userID, channelID, message, evt) {
@@ -55,9 +69,11 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                     var emojiString = '';
                     for (var i = 0; i < emojifyStr.length; i++) {
                         if (emojifyStr.charAt(i) == ' ') {
-                            //do nothing
+                            emojiString = emojiString + ' '
                         } else if (emojifyStr.charAt(i) == 'b') {
                             emojiString = emojiString + ` :b: `
+                        } else if (emojifyStr.charAt(i).match(reg)) {
+                            emojiString = emojiString + `:${inWords(emojifyStr.charAt(i))}:`
                         } else {
                             emojiString = emojiString + ` :regional_indicator_${emojifyStr.charAt(i)}: `
                         }
@@ -74,7 +90,6 @@ bot.on('message', function (user, userID, channelID, message, evt) {
 });
 
 
-
 function randomEmojiSet(numberArg) {
     let emojiString = '';
     for (var i = 0; i < numberArg; i++) {
@@ -89,4 +104,28 @@ function randomEmojiSet(numberArg) {
  */
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+
+
+function inWords(num) {
+    if (num == 1) {
+        return 'one'
+    } else if (num == 2) {
+        return 'two'
+    } else if (num == 3) {
+        return 'three'
+    } else if (num == 4) {
+        return 'four'
+    } else if (num == 5) {
+        return 'five'
+    } else if (num == 6) {
+        return 'six'
+    } else if (num == 7) {
+        return 'seven'
+    } else if (num == 8) {
+        return 'eight'
+    } else if (num == 9) {
+        return 'nine'
+    }
 }
