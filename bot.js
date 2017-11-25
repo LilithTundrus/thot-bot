@@ -2,8 +2,7 @@
 // Custom requires/libs
 const config = require('./config.js');                              // Conifg/auth data
 const ver = '0.0.1';                                                // Arbitrary version for knowing which bot version is deployed
-var reg = new RegExp(/^-?\d+\.?\d*$/);
-let notNumOrCharReg = new RegExp(/^a-z0-9/);
+
 const fs = require('fs');
 
 // npm packages
@@ -73,7 +72,7 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                             emojiString = emojiString + ' '
                         } else if (emojifyStr.charAt(i) == 'b') {
                             emojiString = emojiString + ` :b: `
-                        } else if (emojifyStr.charAt(i).match(reg)) {
+                        } else if (emojifyStr.charAt(i).match(/^-?\d+\.?\d*$/)) {
                             emojiString = emojiString + `:${inWords(emojifyStr.charAt(i))}:`
                         } else if (emojifyStr.charAt(i).match(/[.,\/#!$%\^&\*';:{}=\-_`~()]/g)) {
                             emojiString = emojiString + emojifyStr.charAt(i)
@@ -110,27 +109,28 @@ function getRandomInt(min, max) {
 }
 
 
-
+// this is pretty hacky but works for emoji-based needs
 function inWords(num) {
-    if (num == 1) {
-        return 'one'
-    } else if (num == 2) {
-        return 'two'
-    } else if (num == 3) {
-        return 'three'
-    } else if (num == 4) {
-        return 'four'
-    } else if (num == 5) {
-        return 'five'
-    } else if (num == 6) {
-        return 'six'
-    } else if (num == 7) {
-        return 'seven'
-    } else if (num == 8) {
-        return 'eight'
-    } else if (num == 9) {
-        return 'nine'
-    } else if (num == 0) {
-        return 'zero'
+    switch (num) {
+        case 1:
+            return 'one';
+        case 2:
+            return 'two';
+        case 3:
+            return 'three';
+        case 4:
+            return 'four';
+        case 5:
+            return 'five';
+        case 6:
+            return 'six';
+        case 7:
+            return 'seven';
+        case 8:
+            return 'eight';
+        case 9:
+            return 'nine';
+        case 0:
+            return 'zero';
     }
 }
