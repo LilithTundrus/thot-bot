@@ -2,7 +2,8 @@
 // Custom requires/libs
 const config = require('./config.js');                              // Conifg/auth data
 const ver = '0.0.1';                                                // Arbitrary version for knowing which bot version is deployed
-var reg = new RegExp('^\\d+$');
+var reg = new RegExp(/^-?\d+\.?\d*$/);
+let notNumOrCharReg = new RegExp(/^a-z0-9/);
 const fs = require('fs');
 
 // npm packages
@@ -74,6 +75,8 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                             emojiString = emojiString + ` :b: `
                         } else if (emojifyStr.charAt(i).match(reg)) {
                             emojiString = emojiString + `:${inWords(emojifyStr.charAt(i))}:`
+                        } else if (emojifyStr.charAt(i).match(/[.,\/#!$%\^&\*';:{}=\-_`~()]/g)) {
+                            emojiString = emojiString + emojifyStr.charAt(i)
                         } else {
                             emojiString = emojiString + ` :regional_indicator_${emojifyStr.charAt(i)}: `
                         }
@@ -127,5 +130,7 @@ function inWords(num) {
         return 'eight'
     } else if (num == 9) {
         return 'nine'
+    } else if (num == 0) {
+        return 'zero'
     }
 }
