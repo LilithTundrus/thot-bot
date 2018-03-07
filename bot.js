@@ -1,7 +1,7 @@
 'use strict';                                                       // Allow less 'bad' code
 // Custom requires/libs
 const config = require('./config.js');                              // Conifg/auth data
-const ver = '0.0.1';                                                // Arbitrary version for knowing which bot version is deployed
+const ver = '0.1.0';                                                // Arbitrary version for knowing which bot version is deployed
 
 const fs = require('fs');
 
