@@ -4,7 +4,7 @@
   "description": "Stupid memery",
   "main": "bot.js",
   "dependencies": {
-    "discord.io": "^2.5.3",
+    "discord.io": "github:woor/discord.io#gateway_v6",
     "random-word": "^2.0.0",
     "random-words": "0.0.1"
   },

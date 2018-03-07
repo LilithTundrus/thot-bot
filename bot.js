@@ -25,16 +25,6 @@ bot.on('ready', function (evt) {                                    // Do some l
     });
 });
 
-bot.on('disconnect', function (evt) {
-    console.log(`Bot DISCONNECTED at ${new Date().toISOString()}`);
-    console.log('Attempting reconnect...');
-    bot.connect();
-    if (bot.connected == true) {
-        console.log('Reconnected to Discord');
-    } else {
-        console.log('Reconnect failed...');
-    }
-});
 
 bot.on('message', function (user, userID, channelID, message, evt) {
     if (message.substring(0, 1) == '%') {                           // Listen for messages that will start with `^`
@@ -77,11 +67,17 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                             emojiString = emojiString + ` :regional_indicator_${emojifyStr.charAt(i)}: `
                         }
                     }
-                    console.log(emojiString);
-                    bot.sendMessage({
-                        to: channelID,
-                        message: emojiString,
-                    });
+                    if(emojiString.length < 1999) {
+                        bot.sendMessage({
+                            to: channelID,
+                            message: emojiString,
+                        });
+                    } else {
+                        let arrayOfMessageChunks = createTextChunksBySpaces(emojiString)
+                        console.log(arrayOfMessageChunks)
+                        return createMessageTail(channelID, 0, arrayOfMessageChunks);
+                    }
+
                 }
         }
     }
@@ -93,6 +89,38 @@ function randomEmojiSet(numberArg) {
         emojiString = emojiString + `${randomWords()} :${emoji.random().key}: `;
     }
     return emojiString;
+}
+
+// Recursive
+function createMessageTail(channelIDArg, chunkIndexStart, chunkedMessageArr) {
+    let chunkingObj = addChunksUntilLimit(chunkedMessageArr, chunkIndexStart);
+    if (chunkingObj.lastCompletedChunkIndex <= chunkedMessageArr.length) {
+        // Wait a small amount of time to avoid the messages sending out of order
+        return wait(1.5)
+            .then(() => {
+                bot.simulateTyping(channelIDArg);
+                bot.sendMessage({
+                    to: channelIDArg,
+                    message: chunkingObj.chunkString
+                });
+                return createMessageTail(channelIDArg, chunkingObj.lastCompletedChunkIndex, chunkedMessageArr);
+            })
+            .catch((err) => {
+                console.log(err)
+            })
+    } else {
+        // End the loop, but still wait to make sure these send correctly
+        return wait(1.5)
+            .then(() => {
+                bot.sendMessage({
+                    to: channelIDArg,
+                    message: chunkingObj.chunkString
+                });
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+    }
 }
 
 /**
@@ -127,4 +155,48 @@ function inWords(num) {
         case 0:
             return 'zero';
     }
+}
+
+/**
+ * Add chunks of a string until a limit is reached (1,000 + the last string)
+ * @param {Array<string>} arrayOFChunkStrings 
+ * @param {Number} startIndex 
+ * @returns {Object}
+ */
+function addChunksUntilLimit(arrayOFChunkStrings, startIndex) {
+    let returnObj = {};
+    let chunkStr = '';
+    for (const [index, chunk] of arrayOFChunkStrings.entries()) {
+        if (index < startIndex) {
+            // do nothing
+        } else {
+            if (chunkStr.length < 1800) {
+                chunkStr += ` ${chunk} `;
+            } else {
+                returnObj.lastCompletedChunkIndex = index;
+                break;
+            }
+        }
+    }
+    // Always make sure we return the string
+    returnObj.chunkString = chunkStr;
+    // logger.debug(returnObj.chunkString.length);
+    return returnObj;
+}
+
+
+function createTextChunksBySpaces(string) {
+    return string.split(`  `);
+}
+
+/**
+ * @param {number} timeArg time (in seconds) to wait, holding the main call stack
+ * @returns {promise}
+ */
+function wait(timeArg) {
+    return new Promise((resolve) => {
+        setTimeout(function () {
+            resolve('Promise resolved!!');
+        }, timeArg * 1000);
+    });
 }
