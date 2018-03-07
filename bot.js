@@ -2,14 +2,12 @@
 // Custom requires/libs
 const config = require('./config.js');                              // Conifg/auth data
 const ver = '0.1.0';                                                // Arbitrary version for knowing which bot version is deployed
-
 const fs = require('fs');
 
 // npm packages
 var Discord = require('discord.io');                                // Discord API wrapper
 var emoji = require('node-emoji');
 var randomWords = require('random-words');
-
 var bot = new Discord.Client({                                      // Initialize Discord Bot with config.token
     token: config.discordToken,
     autorun: true
@@ -24,7 +22,6 @@ bot.on('ready', function (evt) {                                    // Do some l
         game: { name: 'Memes' }
     });
 });
-
 
 bot.on('message', function (user, userID, channelID, message, evt) {
     if (message.substring(0, 1) == '%') {                           // Listen for messages that will start with `^`
@@ -67,17 +64,15 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                             emojiString = emojiString + ` :regional_indicator_${emojifyStr.charAt(i)}: `
                         }
                     }
-                    if(emojiString.length < 1999) {
+                    if (emojiString.length < 1999) {
                         bot.sendMessage({
                             to: channelID,
                             message: emojiString,
                         });
                     } else {
                         let arrayOfMessageChunks = createTextChunksBySpaces(emojiString)
-                        console.log(arrayOfMessageChunks)
                         return createMessageTail(channelID, 0, arrayOfMessageChunks);
                     }
-
                 }
         }
     }
@@ -106,7 +101,7 @@ function createMessageTail(channelIDArg, chunkIndexStart, chunkedMessageArr) {
                 return createMessageTail(channelIDArg, chunkingObj.lastCompletedChunkIndex, chunkedMessageArr);
             })
             .catch((err) => {
-                console.log(err)
+                console.log(err);
             })
     } else {
         // End the loop, but still wait to make sure these send correctly
@@ -180,7 +175,6 @@ function addChunksUntilLimit(arrayOFChunkStrings, startIndex) {
     }
     // Always make sure we return the string
     returnObj.chunkString = chunkStr;
-    // logger.debug(returnObj.chunkString.length);
     return returnObj;
 }
 
