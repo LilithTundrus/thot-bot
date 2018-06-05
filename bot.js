@@ -1,7 +1,7 @@
 'use strict';                                                       // Allow less 'bad' code
 // Custom requires/libs
 const config = require('./config.js');                              // Conifg/auth data
-const ver = '0.1.0';                                                // Arbitrary version for knowing which bot version is deployed
+const ver = '0.2.0';                                                // Arbitrary version for knowing which bot version is deployed
 const fs = require('fs');
 
 // npm packages
@@ -56,12 +56,12 @@ bot.on('message', function (user, userID, channelID, message, evt) {
                             emojiString = emojiString + ' '
                         } else if (emojifyStr.charAt(i) == 'b') {
                             emojiString = emojiString + ` :b: `
-                        } else if (emojifyStr.charAt(i).match(/^-?\d+\.?\d*$/)) {
-                            emojiString = emojiString + `:${inWords(emojifyStr.charAt(i))}:`
-                        } else if (emojifyStr.charAt(i).match(/[.,\/#!$%\^&\*';:{}=\-_`~()]/g)) {
-                            emojiString = emojiString + emojifyStr.charAt(i)
-                        } else {
+                        } else if (emojifyStr.charAt(i).match(/\d/)) {
+                            emojiString = emojiString + ` :${inWords(emojifyStr.charAt(i))}: `;
+                        } else if (emojifyStr.charAt(i).match(/^[a-zA-Z]+$/g)) {
                             emojiString = emojiString + ` :regional_indicator_${emojifyStr.charAt(i)}: `
+                        } else {
+                            emojiString = emojiString + emojifyStr.charAt(i);
                         }
                     }
                     if (emojiString.length < 1999) {
@@ -129,25 +129,25 @@ function getRandomInt(min, max) {
 // this is pretty hacky but works for emoji-based needs
 function inWords(num) {
     switch (num) {
-        case 1:
+        case '1':
             return 'one';
-        case 2:
+        case '2':
             return 'two';
-        case 3:
+        case '3':
             return 'three';
-        case 4:
+        case '4':
             return 'four';
-        case 5:
+        case '5':
             return 'five';
-        case 6:
+        case '6':
             return 'six';
-        case 7:
+        case '7':
             return 'seven';
-        case 8:
+        case '8':
             return 'eight';
-        case 9:
+        case '9':
             return 'nine';
-        case 0:
+        case '0':
             return 'zero';
     }
 }
